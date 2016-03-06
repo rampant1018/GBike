@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by Jeff Liaw on 2016/3/5.
@@ -78,6 +79,17 @@ public class BikeData {
         }
         else {
             Log.e("BikeData", "Neither JsonArray or JsonObject.");
+        }
+
+        return result;
+    }
+
+    JsonArray FetchTaipei() {
+        JsonObject rootobj = FetchJsonObject("https://tcgbusfs.blob.core.windows.net/blobyoubike/YouBikeTP.gz");
+        JsonArray result = FetchStopInfo(rootobj.getAsJsonObject("retVal"));
+
+        for(JsonElement obj : result) {
+            System.out.println(obj.getAsJsonObject().get("sna"));
         }
 
         return result;
