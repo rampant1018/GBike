@@ -12,6 +12,7 @@ public class MainActivity extends ActionBarActivity {
         public void run() {
             BikeData bd = new BikeData();
             bd.FetchTaichung();
+            bd.FetchTaoyuan();
         }
     };
 

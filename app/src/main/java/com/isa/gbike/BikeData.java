@@ -1,5 +1,7 @@
 package com.isa.gbike;
 
+import android.util.Log;
+
 import com.google.gson.*;
 
 import java.io.IOException;
@@ -37,23 +39,45 @@ public class BikeData {
     }
 
     private JsonArray FetchStopInfo(JsonElement stoproot) {
-        Set<Map.Entry<String,JsonElement>> stopset = stoproot.getAsJsonObject().entrySet();
         JsonArray result = new JsonArray();
 
-        // Iterate the stop list
-        for(Map.Entry<String,JsonElement> entry : stopset) {
-            JsonObject stop = (JsonObject)entry.getValue();
-            JsonObject mstop = new JsonObject();
+        if(stoproot.isJsonObject()) {
+            Set<Map.Entry<String, JsonElement>> stopset = stoproot.getAsJsonObject().entrySet();
 
-            // Keep sna, sbi, lat, lng, bemp and act as JsonObject and store in result array
-            mstop.add("sna", stop.get("sna"));
-            mstop.add("sbi", stop.get("sbi"));
-            mstop.add("lat", stop.get("lat"));
-            mstop.add("lng", stop.get("lng"));
-            mstop.add("bemp", stop.get("bemp"));
-            mstop.add("act", stop.get("act"));
-            mstop.add("ar", stop.get("ar"));
-            result.add(mstop);
+            // Iterate the stop list
+            for (Map.Entry<String, JsonElement> entry : stopset) {
+                JsonObject stop = (JsonObject) entry.getValue();
+                JsonObject mstop = new JsonObject();
+
+                // Keep sna, sbi, lat, lng, bemp and act as JsonObject and store in result array
+                mstop.add("sna", stop.get("sna"));
+                mstop.add("sbi", stop.get("sbi"));
+                mstop.add("lat", stop.get("lat"));
+                mstop.add("lng", stop.get("lng"));
+                mstop.add("bemp", stop.get("bemp"));
+                mstop.add("act", stop.get("act"));
+                mstop.add("ar", stop.get("ar"));
+                result.add(mstop);
+            }
+        }
+        else if(stoproot.isJsonArray()) {
+            for (JsonElement entry : stoproot.getAsJsonArray()) {
+                JsonObject stop = entry.getAsJsonObject();
+                JsonObject mstop = new JsonObject();
+
+                // Keep sna, sbi, lat, lng, bemp and act as JsonObject and store in result array
+                mstop.add("sna", stop.get("sna"));
+                mstop.add("sbi", stop.get("sbi"));
+                mstop.add("lat", stop.get("lat"));
+                mstop.add("lng", stop.get("lng"));
+                mstop.add("bemp", stop.get("bemp"));
+                mstop.add("act", stop.get("act"));
+                mstop.add("ar", stop.get("ar"));
+                result.add(mstop);
+            }
+        }
+        else {
+            Log.e("BikeData", "Neither JsonArray or JsonObject.");
         }
 
         return result;
@@ -62,7 +86,18 @@ public class BikeData {
     JsonArray FetchTaichung() {
         String sURL = "http://ybjson01.youbike.com.tw:1002/gwjs.json";
         JsonObject rootobj = FetchJsonObject(sURL);
-        JsonArray result = FetchStopInfo(rootobj.get("retVal"));
+        JsonArray result = FetchStopInfo(rootobj.getAsJsonObject("retVal"));
+
+        for(JsonElement obj : result) {
+            System.out.println(obj.getAsJsonObject().get("sna"));
+        }
+
+        return result;
+    }
+
+    JsonArray FetchTaoyuan() {
+        JsonObject rootobj = FetchJsonObject("http://data.tycg.gov.tw/TYCG_OPD/api/v1/rest/datastore/a1b4714b-3b75-4ff8-a8f2-cc377e4eaa0f?format=json");
+        JsonArray result = FetchStopInfo(rootobj.getAsJsonObject("result").getAsJsonArray("records"));
 
         for(JsonElement obj : result) {
             System.out.println(obj.getAsJsonObject().get("sna"));
