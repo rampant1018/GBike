@@ -8,10 +8,19 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
+    private Runnable multiThread = new Runnable() {
+        public void run() {
+            BikeData bd = new BikeData();
+            bd.FetchTaichung();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Thread thread = new Thread(multiThread);
+        thread.start();
     }
 
 
