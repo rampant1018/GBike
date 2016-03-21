@@ -11,9 +11,10 @@ public class MainActivity extends ActionBarActivity {
     private Runnable multiThread = new Runnable() {
         public void run() {
             BikeData bd = new BikeData();
-            bd.FetchTaipei();
-            bd.FetchTaoyuan();
-            bd.FetchTaichung();
+            //bd.FetchTaipei();
+            //bd.FetchTaoyuan();
+            //bd.FetchTaichung();
+            bd.FetchKaoshiung();
         }
     };
 
