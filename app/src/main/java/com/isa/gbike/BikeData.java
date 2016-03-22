@@ -8,6 +8,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -19,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  * Created by Jeff Liaw on 2016/3/5.
@@ -125,6 +127,27 @@ public class BikeData {
         return result;
     }
 
+    //(i%4)= 0:name of a district, 1:name of a station, 2:number of available bikes, 3:number of vacancy
+    void FecthChanghua(){
+        int i = 0;
+        try {
+            URL text = new URL("http://chcg.youbike.com.tw/cht/f12.php");
+            Document xmlDoc =  Jsoup.parse(text, 3000);
+            Elements value = xmlDoc.select("td");
+
+            //i know it's stupid to use "i<272", but it's better than a crash happened all the time
+            while(i < 272){
+                System.out.println(value.get(i).text());
+                i++;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     void FetchKaoshiung() {
         XmlPullParser pullParser = Xml.newPullParser();
         try {
@@ -161,5 +184,27 @@ public class BikeData {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+    }
+
+    //(i%4)= 0:name of a station, 1:number of available bikes, 2:number of vacancy, 3:useless
+    void FecthPingtung(){
+        int i = 0;
+        try {
+            URL text = new URL("http://pbike.pthg.gov.tw/Station/Station.aspx");
+            Document xmlDoc =  Jsoup.parse(text, 3000);
+            Elements value = xmlDoc.select("td");
+
+            //i know it's stupid to use "i<84", but it's better than a crash happened all the time
+            while(i < 84){
+                if(i%4 != 3)
+                    System.out.println(value.get(i).text());
+                i++;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

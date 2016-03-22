@@ -14,7 +14,9 @@ public class MainActivity extends ActionBarActivity {
             //bd.FetchTaipei();
             //bd.FetchTaoyuan();
             //bd.FetchTaichung();
-            bd.FetchKaoshiung();
+            bd.FecthChanghua();
+            //bd.FetchKaoshiung();
+            //bd.FecthPingtung();
         }
     };
 
